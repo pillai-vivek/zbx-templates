@@ -1,0 +1,647 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: a571c0d144b14fd4a87a9d9b2aa9fcd6
+      name: Templates/Applications
+  templates:
+    - uuid: d285edce477c43c39a3f5b7a3d17ec1c
+      template: Jira
+      name: Jira
+      groups:
+        - name: Templates/Applications
+      items:
+        - uuid: d1938f28711f4643bebe25bae16356c9
+          name: maxResults
+          type: DEPENDENT
+          key: abc
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.maxResults
+          master_item:
+            key: Jira.data
+        - uuid: 097ffe71d8134d139ec9f47a4a73a9f3
+          name: status
+          type: DEPENDENT
+          key: asdf
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.[*].fields.status.name'
+          master_item:
+            key: jira.data
+        - uuid: 6fe903e0495941648904f62cab19f0e1
+          name: Priority
+          type: DEPENDENT
+          key: asdfgh
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.[*].fields.priority.name'
+          master_item:
+            key: jira.data
+        - uuid: bc0a9383c5d14f5e83f46e362de4e79d
+          name: Expand
+          type: DEPENDENT
+          key: asdfghjk
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.expand
+          master_item:
+            key: Jira.data
+        - uuid: ceb0986985234cc59cb77aeea28e513e
+          name: StartAt
+          type: DEPENDENT
+          key: asdfghjkl
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.startAt
+          master_item:
+            key: Jira.data
+        - uuid: 0f04bae547674fddae72a31906eec846
+          name: Projectkey
+          type: DEPENDENT
+          key: cvbn
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.project.key'
+          master_item:
+            key: Jira.data
+        - uuid: b2b9640e716f4423b340dfc3b4b76a52
+          name: 'Issue priority'
+          type: DEPENDENT
+          key: dfgh
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.priority.name'
+          master_item:
+            key: Jira.data
+        - uuid: d909c332d8714a91898988a875140a4d
+          name: 'Start time'
+          type: DEPENDENT
+          key: efvbhu
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.startTime.friendly'
+          master_item:
+            key: Jira.data
+        - uuid: fe275443a6eb4c138090c785c946a985
+          name: issueid
+          type: DEPENDENT
+          key: erty
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].id'
+          master_item:
+            key: Jira.data
+        - uuid: 2d5e56e4278a4d1b8c61144c02d0c76a
+          name: Projectid
+          type: DEPENDENT
+          key: fghj
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.project.id'
+          master_item:
+            key: Jira.data
+        - uuid: 44a78cbd08a443e3a55fe27979aec825
+          name: 'SLA name'
+          type: DEPENDENT
+          key: fghjkl
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.name'
+          master_item:
+            key: Jira.data
+        - uuid: eaca54df94f641ce9f14ff265e082442
+          name: 'Jira all data'
+          type: HTTP_AGENT
+          key: Jira.data
+          delay: 5m
+          value_type: TEXT
+          trends: '0'
+          url: 'https://aakash-kessani.atlassian.net/rest/api/3/search?jql=ORDER+BY+created+DESC&maxResults=10000'
+          headers:
+            - name: Authorization
+              value: 'Basic YWFrYXNoQGtlc3NhbmkuaW46QVRBVFQzeEZmR0YwNnNnYlJOdlh2U0lyVE9LbXRxSlgtY09oWDJxRUlaeWpFbHNJNkhVNjRzbUxlaWhJeDlubzY1djByYmdudzh6ZVNfcWY4RmZWemJvalRQaWZTRGZDS1cyb1l1SzBhWU5ZeEotYWRWM0l6b2E0dGFaTHUtdVdPR0ZDRC1QUFhKRkdRTTJ1dXpOcGgzU1NGQ3BWMDgwYWhBS2JYRDFFaWN0SXlVTWNFWUVFb0tZPTAwMjU3QzMw'
+            - name: Content-Type
+              value: application/json
+        - uuid: 96798ef4f4ca4f03bf5df40f1f7f939e
+          name: 'Fetch Jira data'
+          type: HTTP_AGENT
+          key: jira.data
+          delay: 5m
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*]'
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  // Parse the incoming value (assuming it's a JSON array of issue objects)
+                  var issues = JSON.parse(value);
+                  
+                  // Ensure it's an array and has at least one issue
+                  if (!Array.isArray(issues) || issues.length === 0) {
+                      return JSON.stringify({ "error": "No issues found", "received": value });
+                  }
+                  
+                  // Get current time in UTC and 5 minutes ago
+                  var now = new Date();
+                  var fiveMinutesAgo = new Date(now.getTime() - (5 * 60 * 1000)); // Subtract 5 minutes
+                  
+                  // Function to fix Jira timestamp format (2025-03-12T18:31:55.541+0530 to ISO 8601)
+                  function fixJiraTimestamp(timestamp) {
+                      return timestamp.replace(/(\+|\-)(\d{2})(\d{2})$/, "$1$2:$3"); // Convert +0530 to +05:30
+                  }
+                  
+                  // Filter issues updated within the last 5 minutes
+                  var recentIssues = [];
+                  for (var i = 0; i < issues.length; i++) {
+                      var issue = issues[i];
+                      if (!issue.fields || !issue.fields.updated) {
+                          continue; // Skip if "updated" field is missing
+                      }
+                      
+                      var updatedTimestampStr = fixJiraTimestamp(issue.fields.updated);
+                      var updatedTime = new Date(updatedTimestampStr); // Parse corrected format
+                  
+                      if (!isNaN(updatedTime) && updatedTime >= fiveMinutesAgo) {
+                          recentIssues.push(issue); // Add issue to the filtered list
+                      }
+                  }
+                  
+                  // Debugging - Log timestamps (for testing)
+                  Zabbix.log(4, 'Now: ' + now.toISOString() + ' | 5 Min Ago: ' + fiveMinutesAgo.toISOString());
+                  Zabbix.log(4, 'Recent Issues Count: ' + recentIssues.length);
+                  
+                  // Return filtered issues
+                  if (recentIssues.length > 0) {
+                      return JSON.stringify(recentIssues);
+                  } else {
+                      return JSON.stringify({ "message": "No issues updated in the last 5 minutes" });
+                  }
+          url: 'https://aakash-kessani.atlassian.net/rest/api/3/search?jql=ORDER+BY+created+DESC&maxResults=10000'
+          headers:
+            - name: Authorization
+              value: 'Basic YWFrYXNoQGtlc3NhbmkuaW46QVRBVFQzeEZmR0YwNnNnYlJOdlh2U0lyVE9LbXRxSlgtY09oWDJxRUlaeWpFbHNJNkhVNjRzbUxlaWhJeDlubzY1djByYmdudzh6ZVNfcWY4RmZWemJvalRQaWZTRGZDS1cyb1l1SzBhWU5ZeEotYWRWM0l6b2E0dGFaTHUtdVdPR0ZDRC1QUFhKRkdRTTJ1dXpOcGgzU1NGQ3BWMDgwYWhBS2JYRDFFaWN0SXlVTWNFWUVFb0tZPTAwMjU3QzMw'
+            - name: Content-Type
+              value: application/json
+        - uuid: e844279e42304282ae0a33184e119cf2
+          name: jira-new
+          type: SCRIPT
+          key: jira.data1
+          delay: 5m
+          value_type: TEXT
+          trends: '0'
+          params: |
+            var API = {
+                params: {
+                    jiraBaseUrl: 'https://aakash-kessani.atlassian.net/rest/api/3/search',
+                    username: '{$JIRA_USERNAME}',
+                    apiToken: '{$JIRA_API_TOKEN}',
+                    lastMinutes: '{$LASTMINUTES}'
+                },
+            
+                fetchJiraIssues: function () {
+                    var request = new HttpRequest();
+                    var encodedAuth = btoa(this.params.username + ':' + this.params.apiToken);
+            
+                    // Updated JQL query to check both "created" and "updated"
+                    var jql = 'created >= -' + this.params.lastMinutes + 'm OR updated >= -' + this.params.lastMinutes + 'm ORDER BY updated DESC';
+                    var apiUrl = 'https://aakash-kessani.atlassian.net/rest/api/3/search?maxResults=100';
+            
+                    request.addHeader('Authorization', 'Basic ' + encodedAuth);
+                    request.addHeader('Accept', 'application/json');
+            
+                    Zabbix.log(4, '[API Request] Request URL: ' + apiUrl);
+                    var response = request.get(apiUrl);
+                    Zabbix.log(4, '[API Request] Jira Issues Response: ' + response);
+            
+                    if (request.getStatus() !== 200) {
+                        throw 'Request failed with status ' + request.getStatus();
+                    }
+            
+                    try {
+                        var parsedResponse = JSON.parse(response);
+                        Zabbix.log(4, '[DEBUG] Full API Response: ' + JSON.stringify(parsedResponse, null, 2));
+                        return parsedResponse;
+                    } catch (error) {
+                        throw 'Failed to parse response: ' + error;
+                    }
+                },
+            
+                filterRecentIssues: function (data) {
+                    var currentTimestamp = Date.now();
+                    var timeAgo = currentTimestamp - (this.params.lastMinutes * 60 * 1000);
+                    var recentIssues = [];
+            
+                    Zabbix.log(4, '[API Filter] Current timestamp: ' + new Date(currentTimestamp).toISOString());
+                    Zabbix.log(4, '[API Filter] Looking back to: ' + new Date(timeAgo).toISOString());
+            
+                    if (!data || !data.issues || !Array.isArray(data.issues)) {
+                        Zabbix.log(3, '[API Filter] No valid issues array in response');
+                        return recentIssues;
+                    }
+            
+                    for (var i = 0; i < data.issues.length; i++) {
+                        var issue = data.issues[i];
+            
+                        if (issue.fields && issue.fields.updated) {
+                            try {
+                                var updatedTime = new Date(issue.fields.updated).getTime();
+                                var createdTime = new Date(issue.fields.created).getTime();
+            
+                                Zabbix.log(4, '[API Filter] Issue ' + issue.key + ' - Updated: ' + issue.fields.updated + ' (' + updatedTime + ')');
+                                Zabbix.log(4, '[API Filter] Issue ' + issue.key + ' - Created: ' + issue.fields.created + ' (' + createdTime + ')');
+            
+                                if (!isNaN(updatedTime) && updatedTime >= timeAgo) {
+                                    recentIssues.push({
+                                        key: issue.key,
+                                        summary: issue.fields.summary || "No Summary",
+                                        created: issue.fields.created,
+                                        updated: issue.fields.updated,
+                                        status: issue.fields.status ? issue.fields.status.name : "Unknown"
+                                    });
+                                } else if (!isNaN(createdTime) && createdTime >= timeAgo) {
+                                    recentIssues.push({
+                                        key: issue.key,
+                                        summary: issue.fields.summary || "No Summary",
+                                        created: issue.fields.created,
+                                        updated: issue.fields.updated,
+                                        status: issue.fields.status ? issue.fields.status.name : "Unknown"
+                                    });
+                                } else {
+                                    Zabbix.log(4, '[API Filter] Issue ' + issue.key + ' is older than ' + this.params.lastMinutes + ' minutes');
+                                }
+                            } catch (error) {
+                                Zabbix.log(3, '[API Filter] Timestamp parsing error for issue ' + issue.key + ': ' + error);
+                            }
+                        } else {
+                            Zabbix.log(3, '[API Filter] Issue ' + issue.key + ' missing updated field');
+                        }
+                    }
+            
+                    Zabbix.log(4, '[API Filter] Found ' + recentIssues.length + ' recent issues');
+                    return recentIssues;
+                }
+            };
+            
+            try {
+                var jiraData = API.fetchJiraIssues();
+            
+                // Return full API response from Jira for debugging
+                return JSON.stringify({
+                    rawResponse: jiraData, 
+                    timestamp: new Date().toISOString()
+                }, null, 2);
+            } catch (error) {
+                Zabbix.log(3, '[API Request] ERROR: ' + error);
+                return JSON.stringify({ 
+                    'error': error.toString(),
+                    'timestamp': new Date().toISOString()
+                });
+            }
+        - uuid: b28471cdd1bf476dbfcf2980da19e6e8
+          name: 'Breach time'
+          type: DEPENDENT
+          key: qazxdr
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.breachTime.friendly'
+          master_item:
+            key: Jira.data
+        - uuid: 01df037e127a4c5cb0ecf1f7b6c5ae55
+          name: Breached
+          type: DEPENDENT
+          key: qsxcft
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.breached'
+          master_item:
+            key: Jira.data
+        - uuid: 1d6ed5bb4ca94041ac6cd4a6e56e7985
+          name: 'Due date'
+          type: DEPENDENT
+          key: qwe
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.duedate'
+          master_item:
+            key: Jira.data
+        - uuid: 6446df529a0d45d0a4ff57d5fde39c64
+          name: Issuekey
+          type: DEPENDENT
+          key: qwer
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].key'
+          master_item:
+            key: Jira.data
+        - uuid: 80e167d71f3f4f55ba5faee77a01f1bf
+          name: Issuetitle
+          type: DEPENDENT
+          key: qwert
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.summary'
+          master_item:
+            key: Jira.data
+        - uuid: dee2ec606510406daf70907bc01acda8
+          name: 'Issue status'
+          type: DEPENDENT
+          key: qwertyu
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.status.name'
+          master_item:
+            key: Jira.data
+        - uuid: 036d2e302d6a4b89b849d8cb65310734
+          name: 'SLA id'
+          type: DEPENDENT
+          key: thnmko
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.id'
+          master_item:
+            key: Jira.data
+        - uuid: 285207ac15424811857d6f883162b278
+          name: Pname
+          type: DEPENDENT
+          key: ujmklp
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*]'
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  // Parse the received JSON data from preprocessing step
+                  var issues = JSON.parse(value);
+                  
+                  // Check if data exists
+                  if (!issues || issues.length === 0) {
+                      return JSON.stringify([]);
+                  }
+                  
+                  // Object to store unique project names
+                  var uniqueProjects = {};
+                  
+                  // Iterate over issues to extract unique project names
+                  for (var i = 0; i < issues.length; i++) {
+                      var issue = issues[i];
+                  
+                      // Ensure required fields exist
+                      if (!issue.fields || !issue.fields.project || !issue.fields.project.name) {
+                          continue; // Skip if project name is missing
+                      }
+                  
+                      var projectName = issue.fields.project.name;
+                  
+                      // Add project name only if it's not already stored
+                      if (!uniqueProjects.hasOwnProperty(projectName)) {
+                          uniqueProjects[projectName] = { projectName: projectName };
+                      }
+                  }
+                  
+                  // Convert object to an array manually
+                  var result = [];
+                  for (var key in uniqueProjects) {
+                      if (uniqueProjects.hasOwnProperty(key)) {
+                          result.push(uniqueProjects[key]);
+                      }
+                  }
+                  
+                  // Return final JSON output
+                  return JSON.stringify(result);
+          master_item:
+            key: Jira.data
+        - uuid: cfce48bae63049f095dbd4ee8a7f2cee
+          name: Projectname
+          type: DEPENDENT
+          key: vbnm
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.project.name'
+          master_item:
+            key: Jira.data
+        - uuid: 1dd277a9a29c48e4abc12522953f3cb6
+          name: 'Goal duration'
+          type: DEPENDENT
+          key: xcvb
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.goalDuration.friendly'
+          master_item:
+            key: Jira.data
+        - uuid: ce77f21da7214bcc8e8c885ea963abaf
+          name: total
+          type: DEPENDENT
+          key: xyz
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - $.total
+          master_item:
+            key: Jira.data
+        - uuid: dea436244dd445bd9ab06c0e5ab4453a
+          name: Project
+          type: DEPENDENT
+          key: yhnmko
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*]'
+            - type: JAVASCRIPT
+              parameters:
+                - |
+                  // Parse the received JSON data from preprocessing step
+                  var issues = JSON.parse(value);
+                  
+                  // Check if data exists
+                  if (!issues || issues.length === 0) {
+                      return JSON.stringify({ error: "No issues found", received: [] });
+                  }
+                  
+                  // Object to store unique projects
+                  var uniqueProjects = {};
+                  
+                  // Iterate over issues to extract required details
+                  for (var i = 0; i < issues.length; i++) {
+                      var issue = issues[i];
+                  
+                      // Ensure required fields exist
+                      if (!issue.fields || !issue.fields.project) {
+                          continue; // Skip if required fields are missing
+                      }
+                  
+                      var projectName = issue.fields.project.name;
+                  
+                      // Skip if the project is already added
+                      if (uniqueProjects.hasOwnProperty(projectName)) {
+                          continue;
+                      }
+                  
+                      // Extract SLA breach details safely
+                      var slaData = issue.fields["customfield_10051"];
+                      var breachTime = "N/A";
+                      var breached = "N/A";
+                  
+                      if (slaData && slaData.ongoingCycle) {
+                          if (slaData.ongoingCycle.breachTime) {
+                              breachTime = slaData.ongoingCycle.breachTime.friendly || "N/A";
+                          }
+                          if (slaData.ongoingCycle.hasOwnProperty("breached")) {
+                              breached = slaData.ongoingCycle.breached;
+                          }
+                      }
+                  
+                      // Extract fields safely with fallbacks
+                      uniqueProjects[projectName] = {
+                          projectName: projectName, 
+                          projectId: issue.fields.project.id || "N/A",
+                          projectKey: issue.fields.project.key || "N/A",
+                          issueSummary: issue.fields.summary || "N/A",
+                          issueId: issue.id || "N/A",
+                          key: issue.key || "N/A",
+                          status: issue.fields.status.name || "N/A",
+                          creatorName: issue.fields.creator.displayName || "N/A",
+                          reporterName: issue.fields.reporter.displayName || "N/A",
+                          dueDate: issue.fields.duedate || "N/A",
+                          priority: issue.fields.priority.name || "N/A",
+                          createdAt: issue.fields.created || "N/A",
+                          updatedAt: issue.fields.updated || "N/A",
+                          breachTime: breachTime,  // Extracted breach time (friendly)
+                          breached: breached       // Extracted breached status (boolean)
+                      };
+                  }
+                  
+                  // Convert object to array manually
+                  var finalResponse = [];
+                  for (var project in uniqueProjects) {
+                      if (uniqueProjects.hasOwnProperty(project)) {
+                          finalResponse.push(uniqueProjects[project]);
+                      }
+                  }
+                  
+                  // Return JSON response
+                  return JSON.stringify({
+                      error: null,
+                      received: finalResponse
+                  });
+                  
+          master_item:
+            key: Jira.data
+        - uuid: e43057e44802481c936b2681a7beeaa2
+          name: Remainingtime
+          type: DEPENDENT
+          key: zxcv
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.remainingTime.friendly'
+          master_item:
+            key: Jira.data
+        - uuid: 71dbf222cdd74cf886bc530f51f0360d
+          name: 'Elapsed time'
+          type: DEPENDENT
+          key: zxcvbn
+          delay: '0'
+          value_type: TEXT
+          trends: '0'
+          preprocessing:
+            - type: JSONPATH
+              parameters:
+                - '$.issues[*].fields.customfield_10051.ongoingCycle.elapsedTime.friendly'
+          master_item:
+            key: Jira.data
